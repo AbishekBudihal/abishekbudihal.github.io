@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Abishek Budihal — Embedded Systems &amp; Firmware Engineer</title>
+<meta name="description" content="Abishek Budihal — Embedded Systems Engineer, Firmware Developer, and Hardware Engineer. Verilog, ARM, AVR, and mixed-signal design." />
+<meta name="theme-color" content="#0A0D12" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Abishek Budihal — Embedded Systems Engineer" />
+<meta property="og:description" content="Firmware. Hardware. Signal Processing. A portfolio of real embedded systems work." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ============ BOARD TRACE (signature element) ============ -->
+<!-- A continuous PCB trace runs down the page connecting each section like
+     a component placed on a circuit board. Each node is a "via" labeled the
+     way a schematic labels its parts (U1, U2, U3...). This encodes the
+     actual section order, it isn't decorative numbering. -->
+<div class="board-trace" aria-hidden="true">
+  <svg id="trace-svg" viewBox="0 0 2 2000" preserveAspectRatio="none">
+    <path id="trace-path" d="M1,0 L1,2000" />
+    <circle class="pulse" r="4"><animateMotion dur="6s" repeatCount="indefinite"><mpath href="#trace-path"/></animateMotion></circle>
+  </svg>
+</div>
+
+<nav class="nav" id="nav">
+  <a href="#hero" class="nav-logo">AB<span>.</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about"><span class="tag">U2</span>About</a></li>
+    <li><a href="#experience"><span class="tag">U3</span>Experience</a></li>
+    <li><a href="#projects"><span class="tag">U4</span>Projects</a></li>
+    <li><a href="#skills"><span class="tag">U5</span>Skills</a></li>
+    <li><a href="#github"><span class="tag">U6</span>GitHub</a></li>
+    <li><a href="#contact"><span class="tag">U7</span>Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO — U1 ============ -->
+<header class="hero" id="hero" data-node="U1">
+  <canvas id="pcb-canvas" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <p class="eyebrow mono">U1 &nbsp;/&nbsp; TOP-LEVEL &nbsp;/&nbsp; BENGALURU, IN</p>
+    <h1 class="hero-title">
+      Abishek Budihal
+    </h1>
+    <h2 class="hero-role mono">
+      <span id="typed"></span><span class="cursor">&nbsp;</span>
+    </h2>
+    <p class="hero-sub">
+      Electronics engineer who takes signals from silicon to system —
+      bare-metal firmware, mixed-signal boards, and the register maps in between.
+    </p>
+    <div class="hero-actions">
+      <a href="assets/Abishek_Budihal_Resume.pdf" class="btn btn-primary magnetic" download>
+        <span>Resume</span>
+      </a>
+      <a href="https://github.com/AbishekBudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic">
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/abishekbudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic">
+        <span>LinkedIn</span>
+      </a>
+      <a href="#contact" class="btn btn-ghost magnetic">
+        <span>Contact</span>
+      </a>
+    </div>
+  </div>
+  <a href="#about" class="scroll-cue" aria-label="Scroll to content">
+    <span class="mono">SCROLL</span>
+    <div class="scroll-line"><i></i></div>
+  </a>
+</header>
+
+<main>
+
+<!-- ============ ABOUT — U2 ============ -->
+<section class="section" id="about" data-node="U2">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U2</span>
+    <h2>About</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <p>
+        I'm an Electronics &amp; Communication Engineering graduate (VTU Belagavi, CGPA 8.0)
+        who builds things at the boundary of hardware and software — the layer where a
+        register write becomes a voltage on a pin.
+      </p>
+      <p>
+        My six months at <strong>DRDO&nbsp;NSTL</strong> were spent writing bare-metal firmware for
+        ARM Cortex-M3 and AVR ATxmega targets: interrupt-driven UART/SPI/I2C drivers and
+        navigation-communication protocol stacks, work that earned me a Letter of Recommendation
+        from a Scientist-'B' there. Outside of that, I've designed and verified a custom
+        AXI4-Lite peripheral in Verilog, and built a mixed-signal DAC system accurate to
+        0.037% of full scale.
+      </p>
+      <p>
+        I'm currently a <strong>Trainee AV Design Engineer at Online Instruments (India) Ltd</strong>,
+        working AV system design end-to-end — but the pull toward embedded systems, firmware,
+        and silicon-adjacent work is what got this site built in the first place.
+      </p>
+    </div>
+    <div class="about-scope reveal">
+      <div class="scope-card mono">
+        <div class="scope-row"><span>CH1</span><span>Embedded C / C++</span></div>
+        <div class="scope-row"><span>CH2</span><span>Verilog / SystemVerilog</span></div>
+        <div class="scope-row"><span>CH3</span><span>STM32 · ESP32 · AVR</span></div>
+        <div class="scope-row"><span>CH4</span><span>UART · SPI · I2C · CAN</span></div>
+        <div class="waveform"><svg viewBox="0 0 300 60" preserveAspectRatio="none"><polyline points="0,30 20,30 20,10 40,10 40,50 60,50 60,30 90,30 90,5 110,5 110,55 130,55 130,30 160,30 160,15 180,15 180,45 200,45 200,30 230,30 230,10 250,10 250,50 270,50 270,30 300,30" /></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE — U3 ============ -->
+<section class="section" id="experience" data-node="U3">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U3</span>
+    <h2>Experience</h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <p class="mono timeline-date">JUN 2026 — PRESENT</p>
+        <h3>Trainee AV Design Engineer</h3>
+        <p class="timeline-org">Online Instruments (India) Ltd.</p>
+        <p>AV/VC system design for enterprise client projects — signal-chain design,
+           BOQ consolidation, and internal technical training materials on AV protocols
+           and encode/decode systems.</p>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <p class="mono timeline-date">INTERNSHIP</p>
+        <h3>Firmware Intern</h3>
+        <p class="timeline-org">DRDO — Naval Science &amp; Technological Laboratory (NSTL)</p>
+        <p>Bare-metal firmware for ARM Cortex-M3 and AVR ATxmega128A1U: interrupt-driven
+           UART / SPI / I2C drivers and navigation-communication protocol implementation.
+           Received a Letter of Recommendation from a Scientist-'B'.</p>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <p class="mono timeline-date">EDUCATION</p>
+        <h3>B.Tech, Electronics &amp; Communication Engineering</h3>
+        <p class="timeline-org">VTU Belagavi — CGPA 8.0</p>
+        <p>Coursework and independent projects spanning digital electronics, computer
+           architecture, signal processing, and FPGA/VLSI design.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS — U4 ============ -->
+<section class="section" id="projects" data-node="U4">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U4</span>
+    <h2>Projects</h2>
+  </div>
+
+  <div class="projects-grid">
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">DAC81408</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>PrecisionDAC — Mixed-Signal Output System</h3>
+        <div class="badges">
+          <span class="badge">Embedded C</span><span class="badge">AVR ATxmega128A1U</span>
+          <span class="badge">TI DAC81408</span><span class="badge">SPI</span><span class="badge">IEEE 754</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Deliver a high-accuracy analog output from a floating-point setpoint over a resource-constrained AVR MCU.</dd>
+          <dt>Approach</dt><dd>Wrote Embedded C firmware to convert IEEE 754 floating-point values into the DAC81408's register format and drive it over SPI, with a serial link for setpoint updates.</dd>
+          <dt>Challenges</dt><dd>Getting bit-exact floating-point-to-register conversion right, and debugging the analog output path against expected values on a bench scope.</dd>
+          <dt>Result</dt><dd>0.037% full-scale error, verified against reference measurements.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">AXI4-Lite</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>AXI4-Lite DMA Controller &amp; Slave Peripheral</h3>
+        <div class="badges">
+          <span class="badge">Verilog</span><span class="badge">SystemVerilog</span>
+          <span class="badge">UVM</span><span class="badge">Vivado</span><span class="badge">RTL</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Build a custom AXI4-Lite slave peripheral and DMA controller front-end from scratch, with proof it actually works.</dd>
+          <dt>Approach</dt><dd>Designed the RTL and register map in Verilog, then wrote a SystemVerilog UVM testbench to drive and check every register path.</dd>
+          <dt>Challenges</dt><dd>Reaching full functional coverage meant finding and closing edge cases in the handshake and address-decode logic, not just the happy path.</dd>
+          <dt>Result</dt><dd>11/11 tests passing with 100% functional coverage in simulation.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">ETH/UART</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>Serial-to-Ethernet Protocol Bridge</h3>
+        <div class="badges">
+          <span class="badge">Embedded C</span><span class="badge">UART</span><span class="badge">Ethernet</span><span class="badge">Protocol Design</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Get serial-device data onto an Ethernet network without an off-the-shelf bridge chip's protocol assumptions.</dd>
+          <dt>Approach</dt><dd>Implemented a serial-to-Ethernet protocol framing scheme in firmware to package and forward serial data over the network layer.</dd>
+          <dt>Challenges</dt><dd>Framing and timing the two very different link speeds so packets stayed intact under load.</dd>
+          <dt>Result</dt><dd>A working serial-Ethernet bridge exercised on a bench setup.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">ESP32</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>ESP32 Sensor Node &amp; Robotic Vehicle</h3>
+        <div class="badges">
+          <span class="badge">ESP32</span><span class="badge">WiFi</span><span class="badge">GPIO</span><span class="badge">Timers</span><span class="badge">Interrupts</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Build a networked sensor node and a driveable robotic platform sharing one MCU family.</dd>
+          <dt>Approach</dt><dd>Used interrupt-driven GPIO and hardware timers for sensor sampling and motor control, with WiFi for telemetry and remote commands.</dd>
+          <dt>Challenges</dt><dd>Keeping motor-control timing deterministic while WiFi and sensor tasks shared the same core.</dd>
+          <dt>Result</dt><dd>A working sensor-monitoring node and a WiFi-controlled robotic vehicle.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">MERN</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>Personal Finance Dashboard</h3>
+        <div class="badges">
+          <span class="badge">React</span><span class="badge">Node.js</span><span class="badge">MongoDB</span><span class="badge">Auth</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Track personal expenses across categories without spreadsheets.</dd>
+          <dt>Approach</dt><dd>Built a full-stack app with a React dashboard, a Node.js/Express API, and MongoDB for storage, with user authentication.</dd>
+          <dt>Challenges</dt><dd>Modeling recurring vs. one-off expenses cleanly for accurate category-level dashboards.</dd>
+          <dt>Result</dt><dd>A working expense-tracking dashboard with authenticated user accounts.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ SKILLS — U5 ============ -->
+<section class="section" id="skills" data-node="U5">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U5</span>
+    <h2>Technical Skills</h2>
+  </div>
+  <div class="skills-grid">
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Embedded &amp; Firmware</h3>
+      <div class="skill-bar" data-pct="90"><span>Embedded C</span><i></i></div>
+      <div class="skill-bar" data-pct="75"><span>C++</span><i></i></div>
+      <div class="skill-bar" data-pct="65"><span>Python</span><i></i></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Hardware &amp; HDL</h3>
+      <div class="skill-bar" data-pct="80"><span>Verilog / SystemVerilog</span><i></i></div>
+      <div class="skill-bar" data-pct="70"><span>PCB Design (Altium)</span><i></i></div>
+      <div class="skill-bar" data-pct="72"><span>Hardware Debugging</span><i></i></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Protocols</h3>
+      <div class="skill-bar" data-pct="85"><span>UART / SPI / I2C</span><i></i></div>
+      <div class="skill-bar" data-pct="60"><span>CAN / RS232</span><i></i></div>
+      <div class="skill-bar" data-pct="65"><span>Ethernet</span><i></i></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Tools</h3>
+      <div class="skill-bar" data-pct="80"><span>STM32CubeIDE / Keil</span><i></i></div>
+      <div class="skill-bar" data-pct="75"><span>Vivado</span><i></i></div>
+      <div class="skill-bar" data-pct="70"><span>Git / GitHub</span><i></i></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GITHUB — U6 ============ -->
+<section class="section" id="github" data-node="U6">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U6</span>
+    <h2>GitHub</h2>
+  </div>
+  <div class="github-grid reveal">
+    <div class="gh-stats">
+      <div class="gh-counters mono" id="ghCounters">
+        <div><span class="gh-num" id="ghRepos">—</span><span class="gh-label">Repositories</span></div>
+        <div><span class="gh-num" id="ghStars">—</span><span class="gh-label">Stars</span></div>
+        <div><span class="gh-num" id="ghFollowers">—</span><span class="gh-label">Followers</span></div>
+      </div>
+      <p class="gh-note mono" id="ghNote">Fetching live data from the GitHub API…</p>
+    </div>
+    <div class="gh-cards">
+      <img class="gh-card-img" src="https://github-readme-stats.vercel.app/api?username=AbishekBudihal&show_icons=true&theme=transparent&hide_border=true&title_color=52E3C2&text_color=8B96A5&icon_color=E8963E" alt="GitHub stats for AbishekBudihal" loading="lazy" />
+      <img class="gh-card-img" src="https://github-readme-stats.vercel.app/api/top-langs/?username=AbishekBudihal&layout=compact&theme=transparent&hide_border=true&title_color=52E3C2&text_color=8B96A5" alt="Top languages for AbishekBudihal" loading="lazy" />
+    </div>
+    <div id="ghRepoList" class="gh-repo-list mono"></div>
+  </div>
+</section>
+
+<!-- ============ ACHIEVEMENTS ============ -->
+<section class="section" id="achievements">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U6.1</span>
+    <h2>Achievements</h2>
+  </div>
+  <div class="achievements-row reveal">
+    <div class="ach-card">
+      <p class="ach-num mono">0.037%</p>
+      <p>Full-scale error on the PrecisionDAC mixed-signal system</p>
+    </div>
+    <div class="ach-card">
+      <p class="ach-num mono">11 / 11</p>
+      <p>UVM tests passing, 100% functional coverage on the AXI4-Lite core</p>
+    </div>
+    <div class="ach-card">
+      <p class="ach-num mono">8.0</p>
+      <p>CGPA, B.Tech ECE, VTU Belagavi</p>
+    </div>
+    <div class="ach-card">
+      <p class="ach-num mono">LOR</p>
+      <p>Letter of Recommendation from a Scientist-'B' at DRDO NSTL</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT — U7 ============ -->
+<section class="section contact-section" id="contact" data-node="U7">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U7</span>
+    <h2>Contact</h2>
+  </div>
+  <div class="contact-box reveal">
+    <p>Open to embedded systems, firmware, and hardware-adjacent roles.
+       The fastest way to reach me:</p>
+    <div class="contact-links">
+      <a href="mailto:your.email@example.com" class="btn btn-primary magnetic"><span>Email me</span></a>
+      <a href="https://www.linkedin.com/in/abishekbudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic"><span>LinkedIn</span></a>
+      <a href="https://github.com/AbishekBudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic"><span>GitHub</span></a>
+    </div>
+    <p class="mono contact-note">Replace the email above with your real address before publishing.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p class="mono">Designed &amp; built by Abishek Budihal — <span id="year"></span></p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
