@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Abishek Budihal — Embedded Systems &amp; Firmware Engineer</title>
+<meta name="description" content="Abishek Budihal — Embedded Systems Engineer, Firmware Developer, and Hardware Engineer. Verilog, ARM, AVR, and mixed-signal design." />
+<meta name="theme-color" content="#0A0D12" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Abishek Budihal — Embedded Systems Engineer" />
+<meta property="og:description" content="Firmware. Hardware. Signal Processing. A portfolio of real embedded systems work." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   DESIGN TOKENS
+   Signature: a continuous PCB "trace" runs the length of the
+   page, connecting each section like components on a board.
+   ========================================================= */
+:root {
+  --bg: #0A0D12;
+  --bg-elevated: #10141B;
+  --bg-card: #131920;
+  --border: #1E252F;
+  --text: #E9EEF3;
+  --text-muted: #8B96A5;
+  --copper: #E8963E;
+  --signal: #52E3C2;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --max-w: 1120px;
+  --section-pad: clamp(64px, 10vw, 120px);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono { font-family: var(--font-mono); }
+
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+h1, h2, h3 { font-family: var(--font-display); margin: 0; letter-spacing: -0.01em; }
+
+/* =========================================================
+   BOARD TRACE (signature element)
+   ========================================================= */
+.board-trace {
+  position: absolute;
+  top: 0; left: 22px;
+  width: 2px; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+}
+@media (min-width: 900px) { .board-trace { display: block; } }
+#trace-svg { width: 100%; height: 100%; overflow: visible; }
+#trace-path { stroke: var(--border); stroke-width: 2; fill: none; }
+.pulse { fill: var(--signal); filter: drop-shadow(0 0 6px var(--signal)); }
+
+/* =========================================================
+   NAV
+   ========================================================= */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px clamp(20px, 5vw, 56px);
+  background: linear-gradient(to bottom, rgba(10,13,18,0.9), transparent);
+  backdrop-filter: blur(6px);
+}
+.nav-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; }
+.nav-logo span { color: var(--signal); }
+.nav-links { list-style: none; display: flex; gap: 28px; margin: 0; padding: 0; }
+.nav-links a { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-muted); transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-links .tag { font-family: var(--font-mono); font-size: 0.7rem; color: var(--copper); }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
+.nav-toggle span { width: 22px; height: 2px; background: var(--text); display: block; }
+
+@media (max-width: 800px) {
+  .nav-toggle { display: flex; }
+  .nav-links {
+    position: fixed; top: 0; right: 0; height: 100vh; width: min(75vw, 300px);
+    background: var(--bg-elevated); flex-direction: column; padding: 90px 32px;
+    transform: translateX(100%); transition: transform 0.3s ease; gap: 24px;
+    border-left: 1px solid var(--border);
+  }
+  .nav-links.open { transform: translateX(0); }
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero {
+  position: relative; min-height: 100vh; display: flex; align-items: center;
+  overflow: hidden; padding: 0 clamp(20px, 6vw, 80px);
+}
+#pcb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; }
+.hero-inner { position: relative; z-index: 2; max-width: 760px; }
+.eyebrow { color: var(--copper); font-size: 0.8rem; letter-spacing: 0.08em; margin-bottom: 20px; }
+.hero-title {
+  font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 700; line-height: 1.02;
+  margin-bottom: 14px;
+}
+.hero-role {
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem); font-weight: 500; color: var(--signal);
+  min-height: 1.6em; margin-bottom: 22px;
+}
+.cursor { display: inline-block; width: 2px; background: var(--signal); animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.hero-sub { max-width: 520px; color: var(--text-muted); font-size: 1.05rem; margin-bottom: 34px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.scroll-cue {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.1em; z-index: 2;
+}
+.scroll-line { width: 1px; height: 40px; background: var(--border); position: relative; overflow: hidden; }
+.scroll-line i { position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: var(--signal); animation: scrollDrop 2s ease-in-out infinite; }
+@keyframes scrollDrop { 50% { top: 100%; } 100% { top: 100%; } }
+
+/* Buttons */
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  padding: 14px 26px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85rem;
+  font-weight: 500; border: 1px solid var(--border); transition: transform 0.2s, border-color 0.2s, background 0.2s;
+}
+.btn-primary { background: var(--signal); color: #06120F; border-color: var(--signal); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(82,227,194,0.25); }
+.btn-ghost { background: transparent; color: var(--text); }
+.btn-ghost:hover { border-color: var(--signal); color: var(--signal); transform: translateY(-2px); }
+
+/* =========================================================
+   SECTION SCAFFOLDING
+   ========================================================= */
+.section {
+  max-width: var(--max-w); margin: 0 auto; padding: var(--section-pad) clamp(20px, 6vw, 56px);
+  position: relative; z-index: 2;
+}
+.section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 48px; }
+.node-tag {
+  color: var(--copper); font-size: 0.8rem; border: 1px solid var(--border);
+  border-radius: 3px; padding: 3px 8px;
+}
+.section-head h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); }
+
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+/* =========================================================
+   ABOUT
+   ========================================================= */
+.about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: start; }
+@media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; } }
+.about-copy p { color: var(--text-muted); margin: 0 0 18px; }
+.about-copy strong { color: var(--text); }
+.scope-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 24px;
+}
+.scope-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 0.85rem; }
+.scope-row span:first-child { color: var(--copper); }
+.scope-row:last-of-type { border-bottom: none; }
+.waveform { margin-top: 18px; }
+.waveform svg { width: 100%; height: 50px; }
+.waveform polyline { fill: none; stroke: var(--signal); stroke-width: 2; }
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+.timeline { position: relative; padding-left: 28px; border-left: 1px solid var(--border); }
+.timeline-item { position: relative; padding-bottom: 44px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-marker {
+  position: absolute; left: -33px; top: 4px; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--signal); box-shadow: 0 0 0 4px rgba(82,227,194,0.15);
+}
+.timeline-date { color: var(--copper); font-size: 0.75rem; margin-bottom: 6px; letter-spacing: 0.05em; }
+.timeline-content h3 { margin-bottom: 4px; font-size: 1.15rem; }
+.timeline-org { color: var(--text-muted); font-size: 0.9rem; margin: 2px 0 10px; }
+.timeline-content p:not(.timeline-date):not(.timeline-org) { color: var(--text-muted); max-width: 620px; }
+
+/* =========================================================
+   PROJECTS
+   ========================================================= */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; }
+.project-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column; transition: border-color 0.25s, transform 0.25s;
+  transform-style: preserve-3d; will-change: transform;
+}
+.project-card:hover { border-color: var(--signal); }
+.project-chip { padding: 28px; display: flex; justify-content: center; background: radial-gradient(circle at 50% 30%, rgba(82,227,194,0.08), transparent 70%); }
+.project-chip svg { width: 96px; height: 96px; }
+.project-chip rect { fill: none; stroke: var(--copper); stroke-width: 2; }
+.project-chip line { stroke: var(--copper); stroke-width: 2; }
+.chip-label { fill: var(--text-muted); font-family: var(--font-mono); font-size: 8px; }
+.project-body { padding: 0 24px 28px; display: flex; flex-direction: column; gap: 14px; }
+.project-body h3 { font-size: 1.1rem; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--signal);
+  border: 1px solid rgba(82,227,194,0.35); padding: 3px 9px; border-radius: 20px;
+}
+.project-facts dt { font-family: var(--font-mono); font-size: 0.7rem; color: var(--copper); margin-top: 10px; letter-spacing: 0.05em; }
+.project-facts dd { margin: 4px 0 0; color: var(--text-muted); font-size: 0.9rem; }
+.link-arrow { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 14px; display: inline-block; margin-top: 4px; }
+.link-arrow:hover { color: var(--signal); }
+
+/* =========================================================
+   SKILLS
+   ========================================================= */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 40px; }
+.skill-group h3 { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.05em; margin-bottom: 18px; font-weight: 500; }
+.skill-bar { margin-bottom: 18px; }
+.skill-bar span { display: block; font-size: 0.85rem; margin-bottom: 8px; }
+.skill-bar i {
+  display: block; height: 6px; border-radius: 4px; background: var(--border);
+  position: relative; overflow: hidden;
+}
+.skill-bar i::after {
+  content: ''; position: absolute; inset: 0; width: 0; border-radius: 4px;
+  background: linear-gradient(90deg, var(--copper), var(--signal));
+  transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+}
+.skill-bar.in-view i::after { width: var(--pct, 0%); }
+
+/* =========================================================
+   GITHUB
+   ========================================================= */
+.github-grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+.gh-counters { display: flex; gap: 40px; margin-bottom: 14px; flex-wrap: wrap; }
+.gh-counters > div { display: flex; flex-direction: column; }
+.gh-num { font-size: 2.2rem; color: var(--signal); font-weight: 500; }
+.gh-label { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.05em; }
+.gh-note { color: var(--text-muted); font-size: 0.75rem; }
+.gh-cards { display: flex; flex-wrap: wrap; gap: 20px; }
+.gh-card-img { max-width: 100%; border-radius: 8px; }
+.gh-repo-list { display: grid; gap: 10px; }
+.gh-repo-list a {
+  display: flex; justify-content: space-between; padding: 12px 16px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; transition: border-color 0.2s;
+}
+.gh-repo-list a:hover { border-color: var(--signal); color: var(--signal); }
+
+/* =========================================================
+   ACHIEVEMENTS
+   ========================================================= */
+.achievements-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+.ach-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+.ach-num { color: var(--copper); font-size: 1.6rem; margin: 0 0 8px; }
+.ach-card p:last-child { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+
+/* =========================================================
+   CONTACT
+   ========================================================= */
+.contact-box { max-width: 560px; }
+.contact-box p { color: var(--text-muted); }
+.contact-links { display: flex; flex-wrap: wrap; gap: 14px; margin: 22px 0; }
+.contact-note { font-size: 0.72rem; color: var(--copper); }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.footer { text-align: center; padding: 40px 20px 60px; color: var(--text-muted); font-size: 0.78rem; position: relative; z-index: 2; }
+
+</style>
+</head>
+<body>
+
+<!-- ============ BOARD TRACE (signature element) ============ -->
+<!-- A continuous PCB trace runs down the page connecting each section like
+     a component placed on a circuit board. Each node is a "via" labeled the
+     way a schematic labels its parts (U1, U2, U3...). This encodes the
+     actual section order, it isn't decorative numbering. -->
+<div class="board-trace" aria-hidden="true">
+  <svg id="trace-svg" viewBox="0 0 2 2000" preserveAspectRatio="none">
+    <path id="trace-path" d="M1,0 L1,2000" />
+    <circle class="pulse" r="4"><animateMotion dur="6s" repeatCount="indefinite"><mpath href="#trace-path"/></animateMotion></circle>
+  </svg>
+</div>
+
+<nav class="nav" id="nav">
+  <a href="#hero" class="nav-logo">AB<span>.</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about"><span class="tag">U2</span>About</a></li>
+    <li><a href="#experience"><span class="tag">U3</span>Experience</a></li>
+    <li><a href="#projects"><span class="tag">U4</span>Projects</a></li>
+    <li><a href="#skills"><span class="tag">U5</span>Skills</a></li>
+    <li><a href="#github"><span class="tag">U6</span>GitHub</a></li>
+    <li><a href="#contact"><span class="tag">U7</span>Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO — U1 ============ -->
+<header class="hero" id="hero" data-node="U1">
+  <canvas id="pcb-canvas" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <p class="eyebrow mono">U1 &nbsp;/&nbsp; TOP-LEVEL &nbsp;/&nbsp; BENGALURU, IN</p>
+    <h1 class="hero-title">
+      Abishek Budihal
+    </h1>
+    <h2 class="hero-role mono">
+      <span id="typed"></span><span class="cursor">&nbsp;</span>
+    </h2>
+    <p class="hero-sub">
+      Electronics engineer who takes signals from silicon to system —
+      bare-metal firmware, mixed-signal boards, and the register maps in between.
+    </p>
+    <div class="hero-actions">
+      <a href="assets/Abishek_Budihal_Resume.pdf" class="btn btn-primary magnetic" download>
+        <span>Resume</span>
+      </a>
+      <a href="https://github.com/AbishekBudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic">
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/abishekbudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic">
+        <span>LinkedIn</span>
+      </a>
+      <a href="#contact" class="btn btn-ghost magnetic">
+        <span>Contact</span>
+      </a>
+    </div>
+  </div>
+  <a href="#about" class="scroll-cue" aria-label="Scroll to content">
+    <span class="mono">SCROLL</span>
+    <div class="scroll-line"><i></i></div>
+  </a>
+</header>
+
+<main>
+
+<!-- ============ ABOUT — U2 ============ -->
+<section class="section" id="about" data-node="U2">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U2</span>
+    <h2>About</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <p>
+        I'm an Electronics &amp; Communication Engineering graduate (VTU Belagavi, CGPA 8.0)
+        who builds things at the boundary of hardware and software — the layer where a
+        register write becomes a voltage on a pin.
+      </p>
+      <p>
+        My six months at <strong>DRDO&nbsp;NSTL</strong> were spent writing bare-metal firmware for
+        ARM Cortex-M3 and AVR ATxmega targets: interrupt-driven UART/SPI/I2C drivers and
+        navigation-communication protocol stacks, work that earned me a Letter of Recommendation
+        from a Scientist-'B' there. Outside of that, I've designed and verified a custom
+        AXI4-Lite peripheral in Verilog, and built a mixed-signal DAC system accurate to
+        0.037% of full scale.
+      </p>
+      <p>
+        I'm currently a <strong>Trainee AV Design Engineer at Online Instruments (India) Ltd</strong>,
+        working AV system design end-to-end — but the pull toward embedded systems, firmware,
+        and silicon-adjacent work is what got this site built in the first place.
+      </p>
+    </div>
+    <div class="about-scope reveal">
+      <div class="scope-card mono">
+        <div class="scope-row"><span>CH1</span><span>Embedded C / C++</span></div>
+        <div class="scope-row"><span>CH2</span><span>Verilog / SystemVerilog</span></div>
+        <div class="scope-row"><span>CH3</span><span>STM32 · ESP32 · AVR</span></div>
+        <div class="scope-row"><span>CH4</span><span>UART · SPI · I2C · CAN</span></div>
+        <div class="waveform"><svg viewBox="0 0 300 60" preserveAspectRatio="none"><polyline points="0,30 20,30 20,10 40,10 40,50 60,50 60,30 90,30 90,5 110,5 110,55 130,55 130,30 160,30 160,15 180,15 180,45 200,45 200,30 230,30 230,10 250,10 250,50 270,50 270,30 300,30" /></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE — U3 ============ -->
+<section class="section" id="experience" data-node="U3">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U3</span>
+    <h2>Experience</h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <p class="mono timeline-date">JUN 2026 — PRESENT</p>
+        <h3>Trainee AV Design Engineer</h3>
+        <p class="timeline-org">Online Instruments (India) Ltd.</p>
+        <p>AV/VC system design for enterprise client projects — signal-chain design,
+           BOQ consolidation, and internal technical training materials on AV protocols
+           and encode/decode systems.</p>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <p class="mono timeline-date">INTERNSHIP</p>
+        <h3>Firmware Intern</h3>
+        <p class="timeline-org">DRDO — Naval Science &amp; Technological Laboratory (NSTL)</p>
+        <p>Bare-metal firmware for ARM Cortex-M3 and AVR ATxmega128A1U: interrupt-driven
+           UART / SPI / I2C drivers and navigation-communication protocol implementation.
+           Received a Letter of Recommendation from a Scientist-'B'.</p>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <p class="mono timeline-date">EDUCATION</p>
+        <h3>B.Tech, Electronics &amp; Communication Engineering</h3>
+        <p class="timeline-org">VTU Belagavi — CGPA 8.0</p>
+        <p>Coursework and independent projects spanning digital electronics, computer
+           architecture, signal processing, and FPGA/VLSI design.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS — U4 ============ -->
+<section class="section" id="projects" data-node="U4">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U4</span>
+    <h2>Projects</h2>
+  </div>
+
+  <div class="projects-grid">
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">DAC81408</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>PrecisionDAC — Mixed-Signal Output System</h3>
+        <div class="badges">
+          <span class="badge">Embedded C</span><span class="badge">AVR ATxmega128A1U</span>
+          <span class="badge">TI DAC81408</span><span class="badge">SPI</span><span class="badge">IEEE 754</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Deliver a high-accuracy analog output from a floating-point setpoint over a resource-constrained AVR MCU.</dd>
+          <dt>Approach</dt><dd>Wrote Embedded C firmware to convert IEEE 754 floating-point values into the DAC81408's register format and drive it over SPI, with a serial link for setpoint updates.</dd>
+          <dt>Challenges</dt><dd>Getting bit-exact floating-point-to-register conversion right, and debugging the analog output path against expected values on a bench scope.</dd>
+          <dt>Result</dt><dd>0.037% full-scale error, verified against reference measurements.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">AXI4-Lite</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>AXI4-Lite DMA Controller &amp; Slave Peripheral</h3>
+        <div class="badges">
+          <span class="badge">Verilog</span><span class="badge">SystemVerilog</span>
+          <span class="badge">UVM</span><span class="badge">Vivado</span><span class="badge">RTL</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Build a custom AXI4-Lite slave peripheral and DMA controller front-end from scratch, with proof it actually works.</dd>
+          <dt>Approach</dt><dd>Designed the RTL and register map in Verilog, then wrote a SystemVerilog UVM testbench to drive and check every register path.</dd>
+          <dt>Challenges</dt><dd>Reaching full functional coverage meant finding and closing edge cases in the handshake and address-decode logic, not just the happy path.</dd>
+          <dt>Result</dt><dd>11/11 tests passing with 100% functional coverage in simulation.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">ETH/UART</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>Serial-to-Ethernet Protocol Bridge</h3>
+        <div class="badges">
+          <span class="badge">Embedded C</span><span class="badge">UART</span><span class="badge">Ethernet</span><span class="badge">Protocol Design</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Get serial-device data onto an Ethernet network without an off-the-shelf bridge chip's protocol assumptions.</dd>
+          <dt>Approach</dt><dd>Implemented a serial-to-Ethernet protocol framing scheme in firmware to package and forward serial data over the network layer.</dd>
+          <dt>Challenges</dt><dd>Framing and timing the two very different link speeds so packets stayed intact under load.</dd>
+          <dt>Result</dt><dd>A working serial-Ethernet bridge exercised on a bench setup.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">ESP32</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>ESP32 Sensor Node &amp; Robotic Vehicle</h3>
+        <div class="badges">
+          <span class="badge">ESP32</span><span class="badge">WiFi</span><span class="badge">GPIO</span><span class="badge">Timers</span><span class="badge">Interrupts</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Build a networked sensor node and a driveable robotic platform sharing one MCU family.</dd>
+          <dt>Approach</dt><dd>Used interrupt-driven GPIO and hardware timers for sensor sampling and motor control, with WiFi for telemetry and remote commands.</dd>
+          <dt>Challenges</dt><dd>Keeping motor-control timing deterministic while WiFi and sensor tasks shared the same core.</dd>
+          <dt>Result</dt><dd>A working sensor-monitoring node and a WiFi-controlled robotic vehicle.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal tilt">
+      <div class="project-chip" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><rect x="20" y="20" width="80" height="80" rx="4"/><g class="pins">
+          <line x1="20" y1="35" x2="8" y2="35"/><line x1="20" y1="55" x2="8" y2="55"/><line x1="20" y1="75" x2="8" y2="75"/>
+          <line x1="100" y1="35" x2="112" y2="35"/><line x1="100" y1="55" x2="112" y2="55"/><line x1="100" y1="75" x2="112" y2="75"/>
+        </g><text x="60" y="65" text-anchor="middle" class="chip-label">MERN</text></svg>
+      </div>
+      <div class="project-body">
+        <h3>Personal Finance Dashboard</h3>
+        <div class="badges">
+          <span class="badge">React</span><span class="badge">Node.js</span><span class="badge">MongoDB</span><span class="badge">Auth</span>
+        </div>
+        <dl class="project-facts">
+          <dt>Problem</dt><dd>Track personal expenses across categories without spreadsheets.</dd>
+          <dt>Approach</dt><dd>Built a full-stack app with a React dashboard, a Node.js/Express API, and MongoDB for storage, with user authentication.</dd>
+          <dt>Challenges</dt><dd>Modeling recurring vs. one-off expenses cleanly for accurate category-level dashboards.</dd>
+          <dt>Result</dt><dd>A working expense-tracking dashboard with authenticated user accounts.</dd>
+        </dl>
+        <div class="project-links">
+          <a href="#" class="link-arrow">Add GitHub link →</a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ SKILLS — U5 ============ -->
+<section class="section" id="skills" data-node="U5">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U5</span>
+    <h2>Technical Skills</h2>
+  </div>
+  <div class="skills-grid">
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Embedded &amp; Firmware</h3>
+      <div class="skill-bar" data-pct="90"><span>Embedded C</span><i></i></div>
+      <div class="skill-bar" data-pct="75"><span>C++</span><i></i></div>
+      <div class="skill-bar" data-pct="65"><span>Python</span><i></i></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Hardware &amp; HDL</h3>
+      <div class="skill-bar" data-pct="80"><span>Verilog / SystemVerilog</span><i></i></div>
+      <div class="skill-bar" data-pct="70"><span>PCB Design (Altium)</span><i></i></div>
+      <div class="skill-bar" data-pct="72"><span>Hardware Debugging</span><i></i></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Protocols</h3>
+      <div class="skill-bar" data-pct="85"><span>UART / SPI / I2C</span><i></i></div>
+      <div class="skill-bar" data-pct="60"><span>CAN / RS232</span><i></i></div>
+      <div class="skill-bar" data-pct="65"><span>Ethernet</span><i></i></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <h3 class="mono">Tools</h3>
+      <div class="skill-bar" data-pct="80"><span>STM32CubeIDE / Keil</span><i></i></div>
+      <div class="skill-bar" data-pct="75"><span>Vivado</span><i></i></div>
+      <div class="skill-bar" data-pct="70"><span>Git / GitHub</span><i></i></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GITHUB — U6 ============ -->
+<section class="section" id="github" data-node="U6">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U6</span>
+    <h2>GitHub</h2>
+  </div>
+  <div class="github-grid reveal">
+    <div class="gh-stats">
+      <div class="gh-counters mono" id="ghCounters">
+        <div><span class="gh-num" id="ghRepos">—</span><span class="gh-label">Repositories</span></div>
+        <div><span class="gh-num" id="ghStars">—</span><span class="gh-label">Stars</span></div>
+        <div><span class="gh-num" id="ghFollowers">—</span><span class="gh-label">Followers</span></div>
+      </div>
+      <p class="gh-note mono" id="ghNote">Fetching live data from the GitHub API…</p>
+    </div>
+    <div class="gh-cards">
+      <img class="gh-card-img" src="https://github-readme-stats.vercel.app/api?username=AbishekBudihal&show_icons=true&theme=transparent&hide_border=true&title_color=52E3C2&text_color=8B96A5&icon_color=E8963E" alt="GitHub stats for AbishekBudihal" loading="lazy" />
+      <img class="gh-card-img" src="https://github-readme-stats.vercel.app/api/top-langs/?username=AbishekBudihal&layout=compact&theme=transparent&hide_border=true&title_color=52E3C2&text_color=8B96A5" alt="Top languages for AbishekBudihal" loading="lazy" />
+    </div>
+    <div id="ghRepoList" class="gh-repo-list mono"></div>
+  </div>
+</section>
+
+<!-- ============ ACHIEVEMENTS ============ -->
+<section class="section" id="achievements">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U6.1</span>
+    <h2>Achievements</h2>
+  </div>
+  <div class="achievements-row reveal">
+    <div class="ach-card">
+      <p class="ach-num mono">0.037%</p>
+      <p>Full-scale error on the PrecisionDAC mixed-signal system</p>
+    </div>
+    <div class="ach-card">
+      <p class="ach-num mono">11 / 11</p>
+      <p>UVM tests passing, 100% functional coverage on the AXI4-Lite core</p>
+    </div>
+    <div class="ach-card">
+      <p class="ach-num mono">8.0</p>
+      <p>CGPA, B.Tech ECE, VTU Belagavi</p>
+    </div>
+    <div class="ach-card">
+      <p class="ach-num mono">LOR</p>
+      <p>Letter of Recommendation from a Scientist-'B' at DRDO NSTL</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT — U7 ============ -->
+<section class="section contact-section" id="contact" data-node="U7">
+  <div class="section-head reveal">
+    <span class="node-tag mono">U7</span>
+    <h2>Contact</h2>
+  </div>
+  <div class="contact-box reveal">
+    <p>Open to embedded systems, firmware, and hardware-adjacent roles.
+       The fastest way to reach me:</p>
+    <div class="contact-links">
+      <a href="mailto:your.email@example.com" class="btn btn-primary magnetic"><span>Email me</span></a>
+      <a href="https://www.linkedin.com/in/abishekbudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic"><span>LinkedIn</span></a>
+      <a href="https://github.com/AbishekBudihal" target="_blank" rel="noopener" class="btn btn-ghost magnetic"><span>GitHub</span></a>
+    </div>
+    <p class="mono contact-note">Replace the email above with your real address before publishing.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p class="mono">Designed &amp; built by Abishek Budihal — <span id="year"></span></p>
+</footer>
+
+<script>
+// =========================================================
+// Config
+// =========================================================
+const GITHUB_USERNAME = 'AbishekBudihal';
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// =========================================================
+// Mobile nav toggle
+// =========================================================
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => {
+  const isOpen = navLinks.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+}));
+
+// =========================================================
+// Typing animation for hero role line
+// =========================================================
+const roles = [
+  'Embedded Systems Engineer',
+  'Firmware Developer',
+  'Hardware Enthusiast',
+  'Signal Processing'
+];
+const typedEl = document.getElementById('typed');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function typeLoop() {
+  if (reduceMotion) { typedEl.textContent = roles[0]; return; }
+  let roleIndex = 0, charIndex = 0, deleting = false;
+
+  function tick() {
+    const current = roles[roleIndex];
+    if (!deleting) {
+      charIndex++;
+      typedEl.textContent = current.slice(0, charIndex);
+      if (charIndex === current.length) {
+        deleting = true;
+        setTimeout(tick, 1400);
+        return;
+      }
+    } else {
+      charIndex--;
+      typedEl.textContent = current.slice(0, charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+      }
+    }
+    setTimeout(tick, deleting ? 35 : 65);
+  }
+  tick();
+}
+typeLoop();
+
+// =========================================================
+// Scroll reveal (IntersectionObserver)
+// =========================================================
+const revealTargets = document.querySelectorAll('.reveal, .skill-bar');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      if (entry.target.classList.contains('skill-bar')) {
+        const pct = entry.target.dataset.pct || '0';
+        entry.target.style.setProperty('--pct', pct + '%');
+      }
+      io.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+revealTargets.forEach(t => io.observe(t));
+
+// =========================================================
+// Magnetic buttons
+// =========================================================
+document.querySelectorAll('.magnetic').forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    btn.style.transform = `translate(${x * 0.18}px, ${y * 0.35}px)`;
+  });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
+
+// =========================================================
+// 3D tilt on project cards
+// =========================================================
+document.querySelectorAll('.tilt').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    if (reduceMotion) return;
+    const rect = card.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(800px) rotateX(${py * -6}deg) rotateY(${px * 6}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+// =========================================================
+// Nav background solidify on scroll
+// =========================================================
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.style.background = window.scrollY > 40
+    ? 'rgba(10,13,18,0.85)'
+    : 'linear-gradient(to bottom, rgba(10,13,18,0.9), transparent)';
+}, { passive: true });
+
+// =========================================================
+// Hero PCB canvas — manhattan traces with traveling signal pulses
+// =========================================================
+(function pcbCanvas() {
+  const canvas = document.getElementById('pcb-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, traces = [];
+
+  function buildTraces() {
+    traces = [];
+    const cols = Math.max(6, Math.floor(w / 140));
+    const rows = Math.max(4, Math.floor(h / 140));
+    for (let i = 0; i < cols * 1.2; i++) {
+      const startX = Math.round((Math.random() * cols)) * (w / cols);
+      const startY = Math.round((Math.random() * rows)) * (h / rows);
+      const points = [[startX, startY]];
+      let x = startX, y = startY;
+      const segments = 2 + Math.floor(Math.random() * 3);
+      for (let s = 0; s < segments; s++) {
+        if (s % 2 === 0) x += (Math.random() > 0.5 ? 1 : -1) * (w / cols) * (1 + Math.floor(Math.random() * 2));
+        else y += (Math.random() > 0.5 ? 1 : -1) * (h / rows) * (1 + Math.floor(Math.random() * 2));
+        points.push([x, y]);
+      }
+      traces.push({ points, progress: Math.random(), speed: 0.0015 + Math.random() * 0.002 });
+    }
+  }
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+    buildTraces();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function pathLength(points) {
+    let len = 0;
+    for (let i = 1; i < points.length; i++) {
+      len += Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]);
+    }
+    return len;
+  }
+  function pointAt(points, t) {
+    const total = pathLength(points);
+    let target = total * t;
+    for (let i = 1; i < points.length; i++) {
+      const segLen = Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]);
+      if (target <= segLen) {
+        const ratio = segLen === 0 ? 0 : target / segLen;
+        return [
+          points[i - 1][0] + (points[i][0] - points[i - 1][0]) * ratio,
+          points[i - 1][1] + (points[i][1] - points[i - 1][1]) * ratio
+        ];
+      }
+      target -= segLen;
+    }
+    return points[points.length - 1];
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(30,37,47,0.9)';
+    ctx.lineWidth = 1.5;
+    traces.forEach(t => {
+      ctx.beginPath();
+      t.points.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+      ctx.stroke();
+
+      if (!reduceMotion) {
+        t.progress += t.speed;
+        if (t.progress > 1) t.progress = 0;
+      }
+      const [px, py] = pointAt(t.points, t.progress);
+      const grad = ctx.createRadialGradient(px, py, 0, px, py, 8);
+      grad.addColorStop(0, 'rgba(82,227,194,0.9)');
+      grad.addColorStop(1, 'rgba(82,227,194,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(px, py, 8, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// =========================================================
+// Live GitHub data
+// =========================================================
+(async function fetchGitHub() {
+  const reposEl = document.getElementById('ghRepos');
+  const starsEl = document.getElementById('ghStars');
+  const followersEl = document.getElementById('ghFollowers');
+  const noteEl = document.getElementById('ghNote');
+  const listEl = document.getElementById('ghRepoList');
+
+  try {
+    const [userRes, reposRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
+      fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`)
+    ]);
+    if (!userRes.ok || !reposRes.ok) throw new Error('GitHub API request failed');
+
+    const user = await userRes.json();
+    const repos = await reposRes.json();
+
+    const totalStars = repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
+
+    reposEl.textContent = user.public_repos ?? repos.length;
+    starsEl.textContent = totalStars;
+    followersEl.textContent = user.followers ?? 0;
+    noteEl.textContent = 'Live from the GitHub API — updates automatically.';
+
+    const topRepos = [...repos]
+      .sort((a, b) => (b.stargazers_count + b.forks_count) - (a.stargazers_count + a.forks_count))
+      .slice(0, 5);
+
+    listEl.innerHTML = '';
+    topRepos.forEach(r => {
+      const a = document.createElement('a');
+      a.href = r.html_url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.innerHTML = `<span>${r.name}</span><span>★ ${r.stargazers_count} · ${r.language || '—'}</span>`;
+      listEl.appendChild(a);
+    });
+  } catch (err) {
+    noteEl.textContent = 'Live GitHub data unavailable right now — check back shortly.';
+    console.error(err);
+  }
+})();
+
+</script>
+</body>
+</html>
